@@ -1,0 +1,19 @@
+== Introduction to Machine Learning Systems ==
+
+Machine learning systems learn patterns from data without being explicitly programmed for each task. Supervised learning trains models on labeled examples to predict outcomes for new inputs. Unsupervised learning discovers hidden structure in unlabeled data, such as clusters or latent representations. Model evaluation uses held-out test sets and metrics like accuracy, F1 score, and AUC-ROC to measure generalization. Overfitting occurs when a model memorizes training data rather than learning transferable patterns; regularization and cross-validation are standard mitigations. Modern ML systems often combine multiple techniques: feature engineering, neural networks, and ensemble methods.
+
+== Retrieval-Augmented Generation (RAG) ==
+
+Retrieval-Augmented Generation (RAG) is an architecture that improves large language model (LLM) responses by grounding them in retrieved factual context. Rather than relying solely on knowledge baked into model weights during training, a RAG pipeline first retrieves relevant document chunks from an external knowledge base, then passes those chunks alongside the user query to the LLM. This approach reduces hallucination, allows knowledge to be updated without retraining the model, and enables citations back to source documents. RAG is widely used in enterprise question-answering, customer support bots, and research assistants.
+
+== Vector Databases ==
+
+Vector databases store data as dense numerical vectors and enable fast similarity search. Unlike traditional keyword-based search, vector search finds semantically similar content even when exact words differ. Sentence-transformer models convert text into high-dimensional embeddings — typically 384 to 1536 dimensions — capturing meaning rather than surface form. FAISS (Facebook AI Similarity Search) is a popular open-source library for efficient nearest-neighbor search over large embedding collections. It supports both exact search (IndexFlatL2) and approximate methods (IndexIVFFlat) for scaling to billions of vectors. Similarity is measured with L2 distance or cosine similarity depending on the index type.
+
+== Self-Healing AI Pipelines ==
+
+Self-healing AI pipelines incorporate automatic quality evaluation and retry logic to recover from low-quality outputs without human intervention. A critic component inspects each generated response against the original question and retrieved context, assigning a PASS or FAIL verdict. On failure, the pipeline can refine the retrieval query, re-retrieve different context chunks, and regenerate the answer. A maximum retry count prevents infinite loops and triggers a safe fallback response when quality cannot be achieved. LangGraph is well-suited for this pattern because its StateGraph nodes can revisit earlier nodes via conditional edges, making feedback loops explicit in the graph topology rather than buried in imperative code.
+
+== Evaluation Metrics for RAG ==
+
+Evaluating RAG systems requires measuring multiple distinct quality dimensions. Faithfulness measures whether the generated answer is supported by the retrieved context and contains no hallucinated facts. Answer relevance measures whether the response addresses the actual user question. Context precision measures what fraction of retrieved chunks are genuinely relevant to the query. Context recall measures whether the retrieved set contains all information needed for a correct answer. Completeness measures whether the answer covers all aspects of the question, not just a subset. Tools like RAGAS and TruLens automate these evaluations by using LLMs as judges, enabling regression testing as the pipeline evolves.
