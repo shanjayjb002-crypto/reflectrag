@@ -1,6 +1,14 @@
 import os
 import tempfile
 import streamlit as st
+
+# Bridge the Streamlit Cloud secret to the env var the Groq SDK reads.
+if not os.environ.get("GROQ_API_KEY"):
+    try:
+        os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+    except Exception:
+        pass
+
 import vector_store
 from rag_graph import build_graph, RAGState
 

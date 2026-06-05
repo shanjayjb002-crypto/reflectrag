@@ -6,7 +6,16 @@ import vector_store
 MAX_RETRIES = 2
 MODEL = "llama-3.3-70b-versatile"
 
-_client = Groq()
+# Lazy client — created on first use so importing this module never fails,
+# even if the API key is not yet present in the environment.
+_client = None
+
+
+def _get_client() -> Groq:
+    global _client
+    if _client is None:
+        _client = Groq()
+    return _client
 
 
 class RAGState(TypedDict):
@@ -36,7 +45,7 @@ def generate(state: RAGState) -> dict:
     )
     user_message = f"Context:\n{context_text}\n\nQuestion: {state['query']}"
 
-    response = _client.chat.completions.create(
+    response = _get_client().chat.completions.create(
         model=MODEL,
         max_tokens=1024,
         messages=[
@@ -63,7 +72,7 @@ def critic(state: RAGState) -> dict:
         f"RELEVANCE: <integer 1-10, how well the answer addresses the original question>"
     )
 
-    response = _client.chat.completions.create(
+    response = _get_client().chat.completions.create(
         model=MODEL,
         max_tokens=256,
         messages=[{"role": "user", "content": prompt}],
